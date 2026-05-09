@@ -20,11 +20,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        const participantsList = details.participants.map(participant => `
+          <div class="participant-item">
+            <span>${participant}</span>
+            <button class="delete-participant" data-activity="${name}" data-participant="${participant}">✖</button>
+          </div>
+        `).join("");
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="participants">
+            <strong>Participants:</strong>
+            <div class="participants-list">
+              ${participantsList || "<div>No participants yet</div>"}
+            </div>
+          </div>
         `;
 
         activitiesList.appendChild(activityCard);
@@ -34,6 +47,32 @@ document.addEventListener("DOMContentLoaded", () => {
         option.value = name;
         option.textContent = name;
         activitySelect.appendChild(option);
+      });
+
+      // Handle participant deletion
+      activitiesList.addEventListener("click", async (event) => {
+        if (event.target.classList.contains("delete-participant")) {
+          const button = event.target;
+          const activity = button.dataset.activity;
+          const participant = button.dataset.participant;
+
+          try {
+            const response = await fetch(
+              `/activities/${encodeURIComponent(activity)}/unregister?participant=${encodeURIComponent(participant)}`,
+              {
+                method: "DELETE",
+              }
+            );
+
+            if (response.ok) {
+              button.parentElement.remove();
+            } else {
+              console.error("Failed to unregister participant");
+            }
+          } catch (error) {
+            console.error("Error unregistering participant:", error);
+          }
+        }
       });
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";

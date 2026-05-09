@@ -142,3 +142,38 @@ footer {
   padding: 20px;
   color: #666;
 }
+
+/* Added styles for participant items and delete button */
+.participants-list {
+  margin-top: 10px;
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.participant-item:last-child {
+  border-bottom: none;
+}
+
+.delete-participant {
+  background-color: #c62828;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-participant:hover {
+  background-color: #b71c1c;
+}
